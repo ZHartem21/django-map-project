@@ -18,7 +18,8 @@ class ImageInline(SortableTabularInline, admin.TabularInline):
     )
 
 @admin.register(Place)
-class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
+class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
+    fields = ('title', 'description_short', 'description_long', 'lat', 'lon')
     inlines = [
         ImageInline,
     ]

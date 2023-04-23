@@ -15,9 +15,7 @@ class Place(models.Model):
         return self.title
     
     class Meta:
-        ordering = ['title']
-        verbose_name_plural = 'places'
-
+        ordering = ['pk']
 
 class Image(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
