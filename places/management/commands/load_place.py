@@ -1,11 +1,11 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from places.models import Place, Image
 import requests
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Helps to quickly create new place of interest'
 
     def add_arguments(self, parser):
         parser.add_argument('file_address', nargs='+', type=str)
