@@ -12,14 +12,16 @@ class Place(models.Model):
     lon = models.FloatField(max_length=100)
 
     def __str__(self):
-        return self.title
+        return self.title   
     
     class Meta:
         ordering = ['pk']
+        unique_together = [['lat', 'lon']]
+
 
 class Image(models.Model):
-    place = models.ForeignKey(Place, on_delete=models.CASCADE)
-    image_file = models.ImageField()
+    place = models.ForeignKey(Place, on_delete=models.CASCADE, null=True, blank=True)
+    image_file = models.ImageField(null=True, blank=True)
     number = models.IntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
