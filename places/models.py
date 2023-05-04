@@ -8,22 +8,22 @@ class Place(models.Model):
     description_long = HTMLField(blank=True)
     lat = models.FloatField(max_length=100)
     lon = models.FloatField(max_length=100)
-    
+
     class Meta:
         ordering = ['pk']
         unique_together = [['lat', 'lon']]
 
     def __str__(self):
-        return self.title   
+        return self.title
 
 
 class Image(models.Model):
-    place = models.ForeignKey(Place, on_delete=models.CASCADE, null=True, blank=True)
-    image_file = models.ImageField(null=True)
+    place = models.ForeignKey(Place, on_delete=models.CASCADE, null=True, blank=True, related_name='images')
+    image_file = models.ImageField()
     number = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['number']
 
     def __str__(self):
-        return f'{self.place}'
+        return f'{self.place} ({self.number})'

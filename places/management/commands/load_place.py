@@ -25,10 +25,9 @@ class Command(BaseCommand):
             for image_url in place_details['imgs']:
                 response = requests.get(image_url)
                 response.raise_for_status()
-                image_url_content = ContentFile(response.content)
-                image = Image(place=place)
-                image.save()
-                image.image_file.save(response.url.split('/')[-1], image_url_content, save=True)
+                image_url_name = response.url.split('/')[-1]
+                image_url_content = ContentFile(response.content, name=image_url_name)
+                image = Image.objects.create(place=place, image_file=image_url_content)
                 self.stdout.write(self.style.SUCCESS(f'Created image for {image} '))
 
             self.stdout.write(self.style.SUCCESS(f'New: {created}. Created or updated place {place} '))
