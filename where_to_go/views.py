@@ -25,8 +25,8 @@ def index(request):
 
     serialized_places = {
         'places': {
-                'type': 'FeatureCollection',
-                'features': features,
+            'type': 'FeatureCollection',
+            'features': features,
         }
     }
     return render(request, 'index.html', context=serialized_places)
