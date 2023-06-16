@@ -39,7 +39,7 @@ def place_details(request, pk):
     return JsonResponse(
         {
             'title': place.title,
-            'imgs': [image.image_file.url for image in place.images.all().order_by('number')],
+            'imgs': [image.image_file.url for image in place.images.all()],
             'description_short': place.description_short,
             'description_long': place.description_long,
             'coordinates': {
