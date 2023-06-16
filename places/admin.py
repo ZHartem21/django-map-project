@@ -4,16 +4,21 @@ from django.utils import safestring
 
 from .models import Image, Place
 
+
+def get_preview_image(image):
+    return safestring.mark_safe('<img src="{url}" width="200" height="200" />'.format(
+        url = image.image_file.url,
+    ))
+
+
 class ImageInline(SortableTabularInline, admin.TabularInline):
     model = Image
 
     readonly_fields = ['preview_image']
 
-    def preview_image(self, obj):
-        return safestring.mark_safe('<img src="{url}" width="200" height="200" />'.format(
-            url = obj.image_file.url,
-        )
-    )
+    def preview_image(self, image):
+        return get_preview_image(image)
+
 
 @admin.register(Place)
 class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
@@ -27,8 +32,5 @@ class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
 class ImageAdmin(SortableAdminMixin, admin.ModelAdmin):
     readonly_fields = ['preview_image']
 
-    def preview_image(self, obj):
-        return safestring.mark_safe('<img src="{url}" width="200" height="200" />'.format(
-            url = obj.image_file.url,
-        )
-    )
+    def preview_image(self, image):
+        return get_preview_image(image)
