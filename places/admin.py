@@ -1,14 +1,15 @@
 from adminsortable2.admin import SortableAdminMixin, SortableTabularInline, SortableAdminBase
 from django.contrib import admin
-from django.utils import safestring
+from django.utils import safestring 
+from django.utils import html
 
 from .models import Image, Place
 
 
 def get_preview_image(image):
-    return safestring.mark_safe('<img src="{url}" width="200" height="200" />'.format(
-        url = image.image_file.url,
-    ))
+    return html.format_html(
+        '<img src="{}" width="200" height="200" />', image.image_file.url
+    )
 
 
 class ImageInline(SortableTabularInline, admin.TabularInline):
