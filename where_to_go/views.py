@@ -3,12 +3,14 @@ from django.shortcuts import render
 from places.models import Place, Image
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from django.urls import reverse
 
 
 def index(request):
     all_places = Place.objects.all()
     features = []
     for place in all_places:
+        details_url = reverse('place-name', args=(place.pk, ))
         place_feature = {
             'type': 'Feature',
             'geometry': {
@@ -18,7 +20,7 @@ def index(request):
             'properties': {
                 'title': place.title,
                 'placeId': place.pk,
-                'detailsUrl': f'places/{place.pk}',
+                'detailsUrl': details_url,
             }
         }
         features.append(place_feature)
