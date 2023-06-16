@@ -4,8 +4,6 @@ from django.utils import safestring
 
 from .models import Image, Place
 
-# Register your models here.
-
 class ImageInline(SortableTabularInline, admin.TabularInline):
     model = Image
 
