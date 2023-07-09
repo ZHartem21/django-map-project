@@ -19,17 +19,18 @@ class Command(BaseCommand):
         response = requests.get(place_file)
         response.raise_for_status()
         place_details = response.json()
-        if place_details['title']:
-            place, created = Place.objects.get_or_create(
-                title=place_details.get('title'),
-                defaults={
-                    'description_short': place_details.get('description_short'),
-                    'description_long': place_details.get('description_long'),
-                    'lat': place_details.get('coordinates').get('lat'),
-                    'lon': place_details.get('coordinates').get('lng'),
-                },
-            )
-            return place_details.get('imgs'), place, created
+        if not place_details['title']:
+            return
+        place, created = Place.objects.get_or_create(
+            title=place_details.get('title'),
+            defaults={
+                'description_short': place_details.get('description_short'),
+                'description_long': place_details.get('description_long'),
+                'lat': place_details.get('coordinates').get('lat'),
+                'lon': place_details.get('coordinates').get('lng'),
+            },
+        )
+        return place_details.get('imgs'), place, created
 
     def add_arguments(self, parser):
         parser.add_argument('file_address', nargs='+', type=str)
