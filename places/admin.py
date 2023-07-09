@@ -8,7 +8,7 @@ from .models import Image, Place
 
 def get_preview_image(image):
     return html.format_html(
-        '<img src="{}" width="200" height="200" />', image.image_file.url
+        '<img src="{}" height="200" />', image.image_file.url
     )
 
 
