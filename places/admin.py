@@ -8,8 +8,9 @@ from .models import Image, Place
 class ImagePreviewMixin:
     def preview(self, image):
         image_url = image.image_file.url
+        height = 200
 
-        return html.format_html('<img src="{}" height={} />', image_url, height=200)
+        return html.format_html('<img src="{}" height={} />', image_url, height)
 
 
 class ImageInline(SortableTabularInline, admin.TabularInline, ImagePreviewMixin):
