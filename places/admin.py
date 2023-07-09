@@ -1,24 +1,21 @@
 from adminsortable2.admin import SortableAdminMixin, SortableTabularInline, SortableAdminBase
 from django.contrib import admin
-from django.utils import safestring 
 from django.utils import html
 
 from .models import Image, Place
 
 
-def get_preview_image(image):
-    return html.format_html(
-        '<img src="{}" height="200" />', image.image_file.url
-    )
+class ImagePreviewMixin:
+    def preview(self, image):
+        image_url = image.image_file.url
+
+        return html.format_html('<img src="{}" height={} />', image_url, height=200)
 
 
-class ImageInline(SortableTabularInline, admin.TabularInline):
+class ImageInline(SortableTabularInline, admin.TabularInline, ImagePreviewMixin):
     model = Image
+    readonly_fields = ['preview']
 
-    readonly_fields = ['preview_image']
-
-    def preview_image(self, image):
-        return get_preview_image(image)
 
 
 @admin.register(Place)
@@ -30,8 +27,5 @@ class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
 
 
 @admin.register(Image)
-class ImageAdmin(SortableAdminMixin, admin.ModelAdmin):
-    readonly_fields = ['preview_image']
-
-    def preview_image(self, image):
-        return get_preview_image(image)
+class ImageAdmin(SortableAdminMixin, admin.ModelAdmin, ImagePreviewMixin):
+    readonly_fields = ['preview']
