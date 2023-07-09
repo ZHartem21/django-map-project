@@ -22,12 +22,12 @@ class Command(BaseCommand):
         if not place_details['title']:
             return
         place, created = Place.objects.get_or_create(
-            title=place_details.get('title'),
+            title=place_details['title'],
             defaults={
                 'description_short': place_details.get('description_short'),
                 'description_long': place_details.get('description_long'),
-                'lat': place_details.get('coordinates').get('lat'),
-                'lon': place_details.get('coordinates').get('lng'),
+                'lat': place_details['coordinates']['lat'],
+                'lon': place_details['coordinates']['lng'],
             },
         )
         return place_details.get('imgs'), place, created
