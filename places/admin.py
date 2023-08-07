@@ -18,7 +18,6 @@ class ImageInline(SortableTabularInline, admin.TabularInline, ImagePreviewMixin)
     readonly_fields = ['preview']
 
 
-
 @admin.register(Place)
 class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
     fields = ('title', 'description_short', 'description_long', 'lat', 'lon')
