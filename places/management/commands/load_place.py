@@ -46,8 +46,9 @@ class Command(BaseCommand):
         try:
             for place_file in options['file_address']:
                 place_image_urls, place, created = self.load_place_meta(place_file=place_file)
+                if not created:
+                    raise KeyError
                 self.load_place_images(place_image_urls, place=place)
-
                 self.stdout.write(self.style.SUCCESS(f'New: {created}. Created or updated place {place} '))
         except (KeyError, TypeError, IntegrityError):
             self.stdout.write(self.style.ERROR('Failed to create or update place'))
