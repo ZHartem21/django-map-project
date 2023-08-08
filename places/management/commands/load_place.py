@@ -2,13 +2,14 @@ from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 from places.models import Place, Image
 from django.db.utils import IntegrityError
+from django.core.exceptions import MultipleObjectsReturned
 import requests
 
 
 class Command(BaseCommand):
     help = 'Helps to quickly create new place of interest'
 
-    def load_place_images(self, place_image_urls, place):
+    def load_images(self, place_image_urls, place):
         try:
             for image_url in place_image_urls:
                 response = requests.get(image_url)
@@ -20,10 +21,7 @@ class Command(BaseCommand):
         except requests.exceptions.HTTPError:
             return
 
-    def load_place_meta(self, place_file):
-        response = requests.get(place_file)
-        response.raise_for_status()
-        place_details = response.json()
+    def load_place(self, place_details):
         try:
             place, created = Place.objects.get_or_create(
                 title=place_details['title'],
@@ -45,10 +43,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             for place_file in options['file_address']:
-                place_image_urls, place, created = self.load_place_meta(place_file=place_file)
+                response = requests.get(place_file)
+                response.raise_for_status()
+                place_details = response.json()
+                place_image_urls, place, created = self.load_place(place_details=place_details)
                 if not created:
-                    raise KeyError
-                self.load_place_images(place_image_urls, place=place)
+                    raise MultipleObjectsReturned
+                self.load_images(place_image_urls, place=place)
                 self.stdout.write(self.style.SUCCESS(f'New: {created}. Created or updated place {place} '))
-        except (KeyError, TypeError, IntegrityError):
+        except (KeyError, TypeError, IntegrityError, requests.exceptions.HTTPError):
             self.stdout.write(self.style.ERROR('Failed to create or update place'))
+        except MultipleObjectsReturned:
+            self.stdout.write(self.style.WARNING('Place already exists'))
+
